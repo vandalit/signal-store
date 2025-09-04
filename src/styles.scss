@@ -1,0 +1,19 @@
+/* This file is part of the Tailwind CSS project. */
+
+@use "tailwindcss" as *;
+
+
+
+/* Opcional: tu CSS global adicional */
+:root {
+  font-family: system-ui, sans-serif;
+}
+
+/* Puedes sobreescribir estilos si quieres */
+body {
+  @apply bg-white text-black;
+}
+
+.dark body {
+  @apply bg-gray-900 text-white;
+}
