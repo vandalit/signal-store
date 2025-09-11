@@ -116,7 +116,7 @@ export class CartStateService {
     state = signalSlice({
         initialState: this.initialState,
         sources: [this.loadProducts$], // 📥 Auto-load products on service initialization
-        
+       
         // 🎬 ACTION SOURCES - User-triggered state changes
         actionSources: {
             /**
@@ -203,6 +203,16 @@ export class CartStateService {
      */
     count = computed(() => 
         this.state().products.reduce((total, item) => total + item.quantity, 0)
+    );
+
+    /**
+     * 🎓 LEARNING: Price Computed Signal
+     * 
+     * Calculates the total price of all items in the cart
+     * Multiplies each product's price by its quantity and sums them up
+     */
+    price = computed(() => 
+        this.state().products.reduce((total, item) => total + (item.product.price * item.quantity), 0)
     );
 
     // ───────────────────────────────────────────────────────────────────────────
