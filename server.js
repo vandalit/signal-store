@@ -12,7 +12,7 @@ app.use((req, res, next) => {
 });
 
 // Serve static files from the Angular app build directory
-app.use(express.static(path.join(__dirname, 'dist/signal-store'), {
+app.use(express.static(path.join(__dirname, 'dist/signal-store/browser'), {
   maxAge: '1d', // Cache static files for 1 day
   etag: true
 }));
@@ -30,7 +30,7 @@ app.get('/health', (req, res) => {
 
 // Handle Angular routing - send all requests to index.html
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/signal-store/index.html'));
+  res.sendFile(path.join(__dirname, 'dist/signal-store/browser/index.html'));
 });
 
 // Get port from environment variable or default to 3000
