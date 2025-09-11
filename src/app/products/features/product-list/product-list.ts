@@ -27,6 +27,7 @@ import { ProductsStateService } from '../../../data-access/products-state.servic
 import { ProductCard } from '../../ui/product-card/product-card';
 import { CartStateService } from '../../../shared/data-access/cart-state.service';
 import { Product } from '../../../shared/interfaces/product.interface';
+import { PaginationComponent } from '../../../shared/ui/pagination/pagination';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // 🧠 SMART COMPONENT DEFINITION
@@ -50,7 +51,7 @@ import { Product } from '../../../shared/interfaces/product.interface';
 @Component({
   selector: 'app-product-list',
   standalone: true, // 🎯 Standalone component architecture
-  imports: [ProductCard], // 📥 Import child components
+  imports: [ProductCard, PaginationComponent], // 📥 Import child components
   templateUrl: './product-list.html',
   providers: [ProductsStateService], // 🔧 Component-level service provider
 })
@@ -88,20 +89,19 @@ export default class ProductList {
   // 🎬 USER INTERACTION HANDLERS
   // ───────────────────────────────────────────────────────────────────────────
   /**
-   * 🎓 LEARNING: Pagination Pattern
+   * 🎓 LEARNING: Enhanced Pagination Pattern
    * 
    * This method demonstrates reactive pagination:
-   * - Reads current page from state signal
-   * - Increments page number
+   * - Accepts any page number for flexible navigation
    * - Triggers data reload through reactive stream
+   * - Handles pagination component events
    * 
    * 🔍 Reactive Pattern Benefits:
    * - Automatic UI updates when state changes
    * - Centralized loading state management
    * - Error handling in one place
    */
-  changePage() {
-    const page = this.productState.state.page() + 1;
+  onPageChange(page: number) {
     this.productState.changePage$.next(page);
   }
 
