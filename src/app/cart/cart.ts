@@ -1,11 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CartItem } from './ui/cart-item/cart-item';
+import { CartStateService } from '../shared/data-access/cart-state.service';
+import { ProductItemCart } from '../shared/interfaces/product.interface';
 
 @Component({
   selector: 'app-cart',
-  imports: [],
+  imports: [CartItem],
   templateUrl: './cart.html',
   styles: ``
 })
 export default class Cart {
+  state = inject(CartStateService).state;
 
+  onRemove(id: number) {
+    this.state.remove(id);
+  }
+
+  onIncrement(product: ProductItemCart) {
+    this.state.update({
+      product: product.product, 
+      quantity: product.quantity + 1,
+    });
+  }
+
+  onDecrement(product: ProductItemCart) {
+    this.state.update({
+      product: product.product,
+      quantity: product.quantity - 1,
+    });
+  }
 }

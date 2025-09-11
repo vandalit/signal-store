@@ -140,7 +140,34 @@ export class CartStateService {
                         
                         return newState;
                     })
-                )
+                ),
+            remove: (state, action$: Observable<number>) => action$.pipe(
+                map((id) => {
+                    // 🔄 Create new state immutably
+                    const newState = this.remove(state, id);
+                    
+                    // 💾 SIDE EFFECT: Save to localStorage immediately
+                    // This ensures data persistence without waiting for effects
+                    this._storageService.saveProducts(newState.products);
+                    console.log('🛒 Product removed from cart and saved:', newState.products);
+                    
+                    return newState;
+                })
+            ),
+            update: (state, action$: Observable<ProductItemCart>) => action$.pipe(
+                map((product) => {
+                    // 🔄 Create new state immutably
+                    const newState = this.update(state, product);
+                    
+                    // 💾 SIDE EFFECT: Save to localStorage immediately
+                    // This ensures data persistence without waiting for effects
+                    this._storageService.saveProducts(newState.products);
+                    console.log('🛒 Product updated in cart and saved:', newState.products);
+                    
+                    return newState;
+                })
+            )
+
         },
         
         // ⚡ EFFECTS - Side effects that run based on state changes
@@ -211,6 +238,25 @@ export class CartStateService {
         isIncart.quantity += 1;
         return {
             products: [...state().products], // 🔄 Create new array reference
+            loaded: state().loaded
+        };
+    }
+    private remove(state: Signal<State>, id: number): State {
+        return {
+            products: state().products.filter(
+                (product) => product.product.id !== id
+            ),
+            loaded: state().loaded
+        };
+    }
+    private update(state: Signal<State>, product: ProductItemCart): State {
+        return {
+            products: state().products.map(
+                (productInCart) =>
+                    productInCart.product.id === product.product.id
+                        ? { ...productInCart, quantity: product.quantity }
+                        : productInCart
+            ),
             loaded: state().loaded
         };
     }
